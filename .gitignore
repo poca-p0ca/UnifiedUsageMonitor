@@ -1,0 +1,24 @@
+# Build output
+build/
+dist/
+*.o
+*.swiftmodule
+*.dSYM/
+
+# Names a code-signing certificate that exists only on one machine. Without it
+# build-app.sh falls back to ad-hoc signing, which is the right default for
+# anyone else.
+.signing-identity
+
+# Local tool state
+.claude/settings.local.json
+.DS_Store
+
+# Signing material created by tools/make-signing-cert.sh.
+# Private key: belongs in GitHub Actions secrets and a password manager, never here.
+signing/
+
+# Internal dev assets not meant for the public repo.
+PORTING.md
+PORTING.ko.md
+package.sh

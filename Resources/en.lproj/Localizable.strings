@@ -1,0 +1,141 @@
+/* Unified Usage Monitor — English (development language)
+
+   Keys are grouped by where they appear. Every key also exists as a fallback
+   literal in the Swift source, so this file and the code cannot drift apart
+   silently: a missing key here shows the English text, never a raw key.
+
+   To add a language, copy this file to <code>.lproj/Localizable.strings,
+   translate the right-hand side, and add <code> to CFBundleLocalizations in
+   Resources/Info.plist and to L10n.supported in Core/L10n.swift. */
+
+/* MARK: Popover */
+"popover.title" = "Remaining";
+"popover.refresh" = "Refresh now";
+"popover.updatedAt" = "Updated %@";
+"popover.neverUpdated" = "Not updated yet";
+"popover.quit" = "Quit";
+"popover.loading" = "Loading…";
+"popover.empty.title" = "No tools detected";
+"popover.empty.body" = "Install and sign in to Claude Code,\nCodex or Antigravity to see them here";
+/* %@ is a duration such as "4h 12m" */
+"popover.resetsIn" = "resets in %@";
+/* %1$@ is a clock time, %2$@ the reason the last fetch failed */
+"popover.staleCaption" = "as of %1$@ · %2$@";
+
+/* MARK: Gauge */
+/* Sits under the big number; the gauge reads what is left, not what is spent */
+"gauge.remaining" = "left";
+
+/* MARK: Menu bar */
+"menubar.noTools" = "Usage —";
+"menubar.noTools.tooltip" = "None of Claude Code · Codex · Antigravity detected";
+"menubar.noData.tooltip" = "No usage fetched yet";
+/* %1$@ window name, %2$@ percentage, %3$@ optional reset clause */
+"menubar.tooltip.row" = "  %1$@: %2$@ left%3$@";
+/* %@ is a duration */
+"menubar.tooltip.reset" = " · resets in %@";
+"menu.refreshNow" = "Refresh Now";
+"menu.openLogs" = "Open Debug Logs";
+"menu.quit" = "Quit";
+"menu.language" = "Language";
+"menu.language.system" = "Match System";
+
+/* MARK: Durations */
+/* %1$d days, %2$d hours */
+"duration.dayHour" = "%1$dd %2$dh";
+"duration.day" = "%dd";
+/* %1$d hours, %2$d minutes */
+"duration.hourMinute" = "%1$dh %2$dm";
+"duration.hour" = "%dh";
+"duration.minute" = "%dm";
+/* Less than a minute left in the window */
+"duration.imminent" = "<1m";
+
+/* MARK: Window labels — Claude */
+"window.claude.session" = "5h session";
+"window.claude.weeklyAll" = "7d · all models";
+/* %@ is a model display name */
+"window.claude.weeklyScoped" = "7d · %@";
+"window.claude.someModels" = "some models";
+
+/* MARK: Window labels — Codex */
+"window.hour1" = "1-hour window";
+"window.hour5" = "5-hour window";
+"window.hour24" = "24-hour window";
+"window.day7" = "7-day window";
+"window.daysN" = "%d-day window";
+"window.hoursN" = "%d-hour window";
+"window.secondsN" = "%d-second window";
+"window.codex.mainLimit" = "Main limit";
+"window.codex.primary" = "Primary";
+"window.codex.secondary" = "Secondary";
+/* %d is a 1-based index, used only when the API names no limit */
+"window.codex.extraLimit" = "Extra limit %d";
+
+/* MARK: Window labels — Antigravity */
+"window.antigravity.weekly" = "7d";
+"window.antigravity.thirdParty" = "Other models";
+"window.antigravity.5h" = "5h";
+"window.antigravity.group" = "Group %d";
+"window.antigravity.limit" = "Limit %d";
+
+/* MARK: Notes */
+"note.credits.unlimited" = "Credits: unlimited";
+"note.credits.balance" = "Credit balance: %@";
+
+/* MARK: Errors — shared */
+/* %d is a number of seconds */
+"error.rateLimited.retryIn" = "Rate limited — retrying in %ds";
+"error.rateLimited" = "Rate limited — retrying shortly";
+"error.decoding" = "Could not read the response — %@";
+"error.notHTTP" = "Not an HTTP response";
+/* %1$@ keychain service name, %2$@ the OS error text */
+"error.keychain" = "Keychain '%1$@' access failed — %2$@";
+
+/* MARK: Errors — Claude */
+"error.claude.login" = "Sign in: run `claude` in a terminal";
+"error.claude.relogin" = "Signed out — run `claude` in a terminal and sign in";
+"error.claude.malformed" = "Malformed credentials — sign in again";
+"error.claude.expired" = "Token expired — run `claude` in a terminal";
+"error.claude.notJSON" = "Not a JSON object";
+"error.claude.noUsageFields" = "No usage fields found — see anthropic-usage.json in the debug logs";
+
+/* MARK: Errors — Codex */
+"error.codex.login" = "Sign in: run `codex login`";
+"error.codex.relogin" = "Sign in again: run `codex login`";
+"error.codex.malformed" = "Malformed credentials — run `codex login` again";
+"error.codex.noUsageFields" = "No usage fields found — see codex-usage.json in the debug logs";
+
+/* MARK: Errors — Antigravity */
+"error.antigravity.login" = "Sign in with the Antigravity CLI";
+"error.antigravity.noClient" = "Antigravity CLI not found — it is needed to refresh the token";
+"error.antigravity.malformed" = "Malformed credentials — sign in to the Antigravity CLI again";
+"error.antigravity.expired" = "Token expired — sign in to the Antigravity CLI again";
+"error.antigravity.refreshFailed" = "Token refresh failed — sign in to the Antigravity CLI again";
+"error.antigravity.relogin" = "Sign in to the Antigravity CLI again";
+"error.antigravity.noProject" = "No project in the loadCodeAssist response";
+"error.antigravity.emptyGroups" = "Quota groups are empty";
+
+/* MARK: --probe output */
+"probe.notInstalled" = "not installed";
+"probe.plan" = "plan: %@";
+/* %.1f is a percentage */
+"probe.remaining" = "%.1f%% left";
+/* %@ is a duration */
+"probe.resetsIn" = " (resets in %@)";
+"probe.failed" = "failed: %@";
+
+/* MARK: First-run window */
+"onboarding.window" = "Welcome";
+"onboarding.title" = "Unified Usage Monitor";
+"onboarding.subtitle" = "See what is left of every AI service you use, in one place.";
+"onboarding.detected" = "Services found on this Mac";
+"onboarding.keychain.title" = "Please choose “Always Allow”";
+"onboarding.keychain.body" = "macOS asks for permission once per service the first time, so usage can be read. Plain “Allow” asks again on every refresh — choose “Always Allow”.";
+"onboarding.privacy.title" = "Your logins are not taken anywhere";
+"onboarding.privacy.body" = "Each service's login is used only to read its usage. Nothing is sent to any other server and you are never asked for a password. A lapsed session is refreshed the same way that service's own CLI refreshes it.";
+"onboarding.source" = "All source is public on GitHub.";
+"onboarding.menubarHint" = "The gauges live in the menu bar.";
+"onboarding.none.title" = "No services found yet";
+"onboarding.none.body" = "Install and sign in to Claude Code, Codex or Antigravity and its gauge appears on its own — no need to reopen this app.";
+"onboarding.start" = "Start";

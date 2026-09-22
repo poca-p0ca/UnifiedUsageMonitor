@@ -1,0 +1,148 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag to release (e.g. v1.0.0)
+        required: true
+
+permissions:
+  contents: write
+  # Build provenance: GitHub signs a statement that this artifact came from
+  # this workflow at this commit. The point is that the attestation is made and
+  # checked outside the artifact — a tampered build cannot vouch for itself, so
+  # nothing the app could check about its own bytes would mean anything.
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-latest
+
+    env:
+      # Optional. Without them the build is ad-hoc signed, which works but gives
+      # the app a new identity every release — see "Signing a release" in the
+      # README for why that matters to keychain access.
+      MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+      MACOS_CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+      MACOS_SIGN_IDENTITY: ${{ secrets.MACOS_SIGN_IDENTITY }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Check string tables
+        run: python3 tools/check-strings.py
+
+      # Imports into a throwaway keychain that dies with the runner, so the
+      # private key never touches the default one.
+      - name: Import signing certificate
+        if: env.MACOS_CERT_P12_BASE64 != ''
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          PASSWORD="$(uuidgen)"
+          security create-keychain -p "$PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$PASSWORD" "$KEYCHAIN"
+          # base64 output may be wrapped, and a pasted secret can carry
+          # stray whitespace; strip it rather than fail on it.
+          printf '%s' "$MACOS_CERT_P12_BASE64" | tr -d '[:space:]' | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" -k "$KEYCHAIN" \
+            -P "$MACOS_CERT_PASSWORD" -T /usr/bin/codesign
+          # Without this, codesign blocks on a UI prompt that no one can answer.
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$PASSWORD" "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN" login.keychain-db
+          rm -f "$RUNNER_TEMP/cert.p12"
+
+      - name: Build and package
+        run: |
+          if [ -n "$MACOS_SIGN_IDENTITY" ]; then
+            SIGN_IDENTITY="$MACOS_SIGN_IDENTITY" ./package.sh
+          else
+            echo "::notice::No signing certificate configured; this release is ad-hoc signed."
+            ./package.sh
+          fi
+
+      # Everything a downloader needs to check the zip before opening it, and
+      # everything they can compare against once the app is installed.
+      - name: Collect verification facts
+        id: facts
+        run: |
+          APP=build/UnifiedUsageMonitor.app
+          ZIP="$(ls dist/*.zip)"
+          {
+            echo "zip_name=$(basename "$ZIP")"
+            echo "sha256=$(shasum -a 256 "$ZIP" | cut -d' ' -f1)"
+            echo "archs=$(lipo -archs "$APP/Contents/MacOS/UnifiedUsageMonitor")"
+            echo "authority=$(codesign -dvvv "$APP" 2>&1 | sed -n 's/^Authority=//p' | head -1 || true)"
+            echo "requirement=$(codesign -d -r- "$APP" 2>&1 | tail -1 | sed 's/^designated => //')"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*.zip
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          files: dist/*.zip
+          generate_release_notes: true
+          body: |
+            Universal build for Apple Silicon and Intel (${{ steps.facts.outputs.archs }}),
+            macOS 14 or later. English and Korean.
+
+            ## Verify before you open it
+
+            This app reads the logins your Claude Code, Codex and Antigravity
+            CLIs already stored. That is worth verifying you got the real thing.
+
+            **Build provenance** — GitHub signed a statement that this file was
+            built by this repository's release workflow, from this tag. It is
+            checked by GitHub, not by the app, which is the only arrangement
+            that means anything: a tampered build would happily tell you it was
+            fine.
+
+            ```
+            gh attestation verify ${{ steps.facts.outputs.zip_name }} --repo ${{ github.repository }}
+            ```
+
+            **Checksum**
+
+            ```
+            shasum -a 256 ${{ steps.facts.outputs.zip_name }}
+            ${{ steps.facts.outputs.sha256 }}
+            ```
+
+            **Code signature**, once installed — a rebuild by anyone else
+            cannot reproduce this certificate:
+
+            ```
+            codesign -dvvv /Applications/UnifiedUsageMonitor.app
+            Authority=${{ steps.facts.outputs.authority }}
+
+            codesign -d -r- /Applications/UnifiedUsageMonitor.app
+            designated => ${{ steps.facts.outputs.requirement }}
+            ```
+
+            ## First launch
+
+            **Gatekeeper blocks it once.** This build is not notarized with an
+            Apple Developer ID. Double-click the app, dismiss the warning, then
+            open **System Settings → Privacy & Security** and press **Open
+            Anyway**.
+
+            Verify the checksum or the attestation *before* you do that — that
+            step is exactly the habit a tampered build would rely on.
+
+            On macOS 14 you can instead Control-click → Open; that shortcut was
+            removed in macOS 15.
+
+            `INSTALL.txt` inside the zip has the full steps in English and
+            Korean.

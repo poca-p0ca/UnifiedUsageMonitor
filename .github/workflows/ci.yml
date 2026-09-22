@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build universal binary
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check string tables
+        run: python3 tools/check-strings.py
+
+      - name: Build
+        run: ./build-app.sh
+
+      - name: Verify both architectures are present
+        run: |
+          BIN=build/UnifiedUsageMonitor.app/Contents/MacOS/UnifiedUsageMonitor
+          ARCHS="$(lipo -archs "$BIN")"
+          echo "architectures: $ARCHS"
+          for arch in arm64 x86_64; do
+            case "$ARCHS" in *"$arch"*) ;; *) echo "::error::missing $arch slice"; exit 1 ;; esac
+          done
+
+      - name: Verify localizations are bundled
+        run: |
+          for lang in en ko; do
+            test -f "build/UnifiedUsageMonitor.app/Contents/Resources/$lang.lproj/Localizable.strings" \
+              || { echo "::error::$lang.lproj missing from the bundle"; exit 1; }
+          done
+
+      # The icon is copied from a committed .icns, so a broken copy step or a
+      # lost file would ship an iconless app without failing anything.
+      - name: Verify the icon is bundled
+        run: |
+          ICON=build/UnifiedUsageMonitor.app/Contents/Resources/AppIcon.icns
+          test -f "$ICON" || { echo "::error::AppIcon.icns missing from the bundle"; exit 1; }
+          NAME="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIconFile' \
+            build/UnifiedUsageMonitor.app/Contents/Info.plist)"
+          test "$NAME" = "AppIcon" || { echo "::error::CFBundleIconFile is '$NAME'"; exit 1; }
+          sips -g pixelWidth "$ICON" >/dev/null || { echo "::error::AppIcon.icns is not readable"; exit 1; }
+
+      - name: Verify the signature
+        run: codesign --verify --strict build/UnifiedUsageMonitor.app
+
+      # No tool is installed on a runner, so this exercises detection and the
+      # "not installed" path without any network call or credential.
+      - name: Smoke test --probe
+        run: |
+          OUT="$(build/UnifiedUsageMonitor.app/Contents/MacOS/UnifiedUsageMonitor --probe)"
+          echo "$OUT"
+          for provider in anthropic codex antigravity; do
+            case "$OUT" in *"[$provider]"*) ;; *) echo "::error::$provider missing from probe output"; exit 1 ;; esac
+          done
+
+      - name: Package
+        run: ./package.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: UnifiedUsageMonitor-unsigned
+          path: dist/*.zip
+          if-no-files-found: error

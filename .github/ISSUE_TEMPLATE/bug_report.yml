@@ -1,0 +1,53 @@
+name: Bug report
+description: A gauge is wrong, blank, or the app misbehaves
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: if a gauge is blank, check
+        `~/Library/Logs/UnifiedUsageMonitor/monitor.log` — it usually names the
+        cause directly.
+
+        **Redact before pasting.** The `*-usage.json` files can contain account
+        identifiers. They do not contain tokens.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and chip
+      placeholder: "15.2, Apple Silicon (M2)"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: tools
+    attributes:
+      label: Which tools are installed
+      options:
+        - label: Claude Code
+        - label: Codex
+        - label: Antigravity
+
+  - type: textarea
+    id: probe
+    attributes:
+      label: --probe output
+      description: |
+        `/Applications/UnifiedUsageMonitor.app/Contents/MacOS/UnifiedUsageMonitor --probe`
+      render: text
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Relevant log lines
+      description: From `~/Library/Logs/UnifiedUsageMonitor/monitor.log`.
+      render: text

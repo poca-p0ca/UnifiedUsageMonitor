@@ -1,0 +1,124 @@
+/* Unified Usage Monitor — 한국어
+
+   키 구성은 en.lproj/Localizable.strings 와 같습니다. 그쪽이 개발 언어이고
+   Swift 코드에 폴백 문자열로도 들어 있으므로, 여기에 키가 빠지면 그 자리에
+   영어가 나옵니다 (키 문자열이 그대로 노출되지는 않습니다). */
+
+/* MARK: 팝오버 */
+"popover.title" = "남은 사용량";
+"popover.refresh" = "지금 새로고침";
+"popover.updatedAt" = "업데이트 %@";
+"popover.neverUpdated" = "아직 업데이트 없음";
+"popover.quit" = "종료";
+"popover.loading" = "불러오는 중…";
+"popover.empty.title" = "감지된 도구가 없습니다";
+"popover.empty.body" = "Claude Code · Codex · Antigravity 중 하나를\n설치하고 로그인하면 여기에 표시됩니다";
+"popover.resetsIn" = "%@ 후 리셋";
+"popover.staleCaption" = "%1$@ 기준 · %2$@";
+
+/* MARK: 게이지 */
+"gauge.remaining" = "잔여";
+
+/* MARK: 메뉴막대 */
+"menubar.noTools" = "사용량 —";
+"menubar.noTools.tooltip" = "Claude Code · Codex · Antigravity 중 감지된 도구가 없습니다";
+"menubar.noData.tooltip" = "사용량을 아직 가져오지 못했습니다";
+"menubar.tooltip.row" = "  %1$@: %2$@ 남음%3$@";
+"menubar.tooltip.reset" = " · %@ 후 리셋";
+"menu.refreshNow" = "지금 새로고침";
+"menu.openLogs" = "디버그 로그 열기";
+"menu.quit" = "종료";
+"menu.language" = "언어";
+"menu.language.system" = "시스템 설정 따르기";
+
+/* MARK: 기간 */
+"duration.dayHour" = "%1$d일 %2$d시간";
+"duration.day" = "%d일";
+"duration.hourMinute" = "%1$d시간 %2$d분";
+"duration.hour" = "%d시간";
+"duration.minute" = "%d분";
+/* "곧 리셋"으로 읽히도록 popover.resetsIn 과 맞춰 둡니다 */
+"duration.imminent" = "곧";
+
+/* MARK: 창 이름 — Claude */
+"window.claude.session" = "5시간 세션";
+"window.claude.weeklyAll" = "7일 (전체 모델)";
+"window.claude.weeklyScoped" = "7일 (%@)";
+"window.claude.someModels" = "일부 모델";
+
+/* MARK: 창 이름 — Codex */
+"window.hour1" = "1시간 창";
+"window.hour5" = "5시간 창";
+"window.hour24" = "24시간 창";
+"window.day7" = "7일 창";
+"window.daysN" = "%d일 창";
+"window.hoursN" = "%d시간 창";
+"window.secondsN" = "%d초 창";
+"window.codex.mainLimit" = "기본 한도";
+"window.codex.primary" = "기본";
+"window.codex.secondary" = "보조";
+"window.codex.extraLimit" = "추가 한도 %d";
+
+/* MARK: 창 이름 — Antigravity */
+"window.antigravity.weekly" = "7일";
+"window.antigravity.thirdParty" = "외부 모델";
+"window.antigravity.5h" = "5시간";
+"window.antigravity.group" = "그룹 %d";
+"window.antigravity.limit" = "한도 %d";
+
+/* MARK: 비고 */
+"note.credits.unlimited" = "크레딧: 무제한";
+"note.credits.balance" = "크레딧 잔액: %@";
+
+/* MARK: 오류 — 공통 */
+"error.rateLimited.retryIn" = "요청 한도 초과 — %d초 후 재시도";
+"error.rateLimited" = "요청 한도 초과 — 잠시 후 재시도";
+"error.decoding" = "응답 해석 실패 — %@";
+"error.notHTTP" = "HTTP 응답이 아님";
+"error.keychain" = "키체인 '%1$@' 접근 실패 — %2$@";
+
+/* MARK: 오류 — Claude */
+"error.claude.login" = "터미널에서 `claude` 로그인 필요";
+"error.claude.relogin" = "로그아웃됨 — 터미널에서 `claude` 실행 후 로그인";
+"error.claude.malformed" = "자격증명 형식 오류 — 재로그인 필요";
+"error.claude.expired" = "토큰 만료 — 터미널에서 `claude` 실행";
+"error.claude.notJSON" = "JSON 객체가 아님";
+"error.claude.noUsageFields" = "사용률 필드를 찾지 못함 — 디버그 로그의 anthropic-usage.json 확인";
+
+/* MARK: 오류 — Codex */
+"error.codex.login" = "`codex login` 필요";
+"error.codex.relogin" = "`codex login` 재실행 필요";
+"error.codex.malformed" = "자격증명 형식 오류 — `codex login` 재실행";
+"error.codex.noUsageFields" = "사용률 필드를 찾지 못함 — 디버그 로그의 codex-usage.json 확인";
+
+/* MARK: 오류 — Antigravity */
+"error.antigravity.login" = "Antigravity CLI 로그인 필요";
+"error.antigravity.noClient" = "Antigravity CLI를 찾지 못했습니다 — 토큰 갱신에 필요합니다";
+"error.antigravity.malformed" = "자격증명 형식 오류 — Antigravity CLI 재로그인";
+"error.antigravity.expired" = "토큰 만료 — Antigravity CLI 재로그인 필요";
+"error.antigravity.refreshFailed" = "토큰 갱신 실패 — Antigravity CLI 재로그인 필요";
+"error.antigravity.relogin" = "Antigravity CLI 재로그인 필요";
+"error.antigravity.noProject" = "loadCodeAssist 응답에 프로젝트 없음";
+"error.antigravity.emptyGroups" = "쿼터 그룹이 비어 있음";
+
+/* MARK: --probe 출력 */
+"probe.notInstalled" = "미설치";
+"probe.plan" = "플랜: %@";
+"probe.remaining" = "잔여 %.1f%%";
+"probe.resetsIn" = " (%@ 후 리셋)";
+"probe.failed" = "실패: %@";
+
+/* MARK: 첫 실행 창 */
+"onboarding.window" = "시작하기";
+"onboarding.title" = "Unified Usage Monitor";
+"onboarding.subtitle" = "여러분이 사용하는 AI 서비스의 잔여 사용량을 한번에 확인하세요";
+"onboarding.detected" = "이 Mac에서 찾은 서비스";
+"onboarding.keychain.title" = "“항상 허용” 버튼을 눌러주세요";
+"onboarding.keychain.body" = "사용량 측정을 위해 최초 1회 실행시 권한을 요청합니다. “허용”을 누르면 갱신마다 다시 권한이 요청되므로, 꼭 “항상 허용”을 눌러주세요.";
+"onboarding.privacy.title" = "여러분의 로그인 정보를 탈취하지 않습니다";
+"onboarding.privacy.body" = "각 서비스의 로그인 정보는 사용량 정보를 얻는 데에만 사용합니다. 다른 서버로 전송하거나 비밀번호를 묻지 않습니다. 만료된 세션은 해당 서비스의 CLI가 갱신하는 것과 같은 방식으로 갱신합니다.";
+"onboarding.source" = "모든 소스는 GitHub로 공개되어 있습니다.";
+"onboarding.menubarHint" = "게이지는 메뉴막대에 표시됩니다.";
+"onboarding.none.title" = "아직 찾은 서비스가 없습니다";
+"onboarding.none.body" = "Claude Code · Codex · Antigravity 중 하나를 설치하고 로그인하면 게이지가 저절로 나타납니다. 앱을 다시 열 필요는 없습니다.";
+"onboarding.start" = "시작";

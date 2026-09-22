@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a change
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: The situation, not the solution — it often has a simpler answer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you have in mind
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Two things that will not be accepted, so you know up front:
+
+        - **Shorter poll intervals.** The Anthropic endpoint answers frequent
+          calls with a rate-limit block that can last hours.
+        - **Vendor credentials committed to this repository.** Secrets taken
+          from a CLI binary are read at runtime instead.
