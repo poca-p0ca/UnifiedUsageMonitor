@@ -6,7 +6,7 @@ Check your Claude · ChatGPT (Codex) · Antigravity subscription usage all in on
 
 <img src="docs/images/popover-ko-light-captured.png" width="620" alt="A popover with three gauges: ChatGPT · Codex, Claude, Antigravity">
 
-## Supported out of the box
+## Supported Services
 
 Claude, ChatGPT Codex, and Antigravity are supported.
 Every poll checks whether each is installed, and a detected tool is added to the popover and menu bar UI.
